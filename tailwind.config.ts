@@ -52,6 +52,19 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				python: {
+					blue: 'hsl(var(--python-blue))',
+					yellow: 'hsl(var(--python-yellow))',
+					green: 'hsl(var(--python-green))',
+					purple: 'hsl(var(--python-purple))',
+					orange: 'hsl(var(--python-orange))',
+					red: 'hsl(var(--python-red))'
+				},
+				editor: {
+					bg: 'hsl(var(--editor-bg))',
+					line: 'hsl(var(--editor-line))',
+					selection: 'hsl(var(--editor-selection))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
