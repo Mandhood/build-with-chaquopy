@@ -1,0 +1,30 @@
+name: Sync piano-man2
+
+on:
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v3
+
+      - name: Pull files from source repo
+        uses: actions/checkout@v3
+        with:
+          repository: Mandhood/piano-man2
+          path: piano-man2
+
+      - name: Copy files into target repo
+        run: |
+          cp -R piano-man2/* .
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Sync files from piano-man2" || echo "No changes to commit"
+          git push
