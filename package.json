@@ -45,6 +45,7 @@
     "start": "next start",
     "dev": "next dev",
     "build": "next build",
+    "build:dev": "vite build --mode development",
     "lint": "next lint",
     "format": "prettier --write **/*.{ts,tsx}",
     "gen": "cd scripts && ts-node generate.ts && cd ..",
