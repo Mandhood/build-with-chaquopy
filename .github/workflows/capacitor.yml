@@ -1,0 +1,49 @@
+name: Setup Capacitor for Android
+
+on:
+  workflow_dispatch: # Run manually
+  push:
+    branches:
+      - main
+
+jobs:
+  setup-capacitor-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Install Capacitor core + CLI
+      - name: Install Capacitor
+        run: |
+          npm install @capacitor/core
+          npm install -D @capacitor/cli
+
+      # 5. Initialize Capacitor (only runs if config doesn’t exist)
+      - name: Initialize Capacitor
+        run: |
+          if [ ! -f capacitor.config.json ]; then
+            npx cap init "Perfect Piano" "com.pianoman.sing" --web-dir=dist
+          fi
+
+      # 6. Install Capacitor Android
+      - name: Add Capacitor Android
+        run: |
+          npm install @capacitor/android
+          npx cap add android
+
+      # 7. Sync project
+      - name: Sync Capacitor Android
+        run: npx cap sync android
