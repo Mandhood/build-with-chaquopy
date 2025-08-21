@@ -1,7 +1,7 @@
 name: Setup Capacitor for Android
 
 on:
-  workflow_dispatch: # Run manually
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -21,27 +21,27 @@ jobs:
         with:
           node-version: '18'
 
-      # 3. Install dependencies (skip peer dependency conflicts)
+      # 3. Install dependencies (force legacy peer deps)
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      # 4. Install Capacitor core + CLI
+      # 4. Install Capacitor core + CLI (use legacy peer deps)
       - name: Install Capacitor
         run: |
-          npm install @capacitor/core
-          npm install -D @capacitor/cli
+          npm install @capacitor/core --legacy-peer-deps
+          npm install -D @capacitor/cli --legacy-peer-deps
 
-      # 5. Initialize Capacitor (only runs if config doesn’t exist)
+      # 5. Initialize Capacitor (only if config doesn’t exist)
       - name: Initialize Capacitor
         run: |
           if [ ! -f capacitor.config.json ]; then
             npx cap init "Perfect Piano" "com.pianoman.sing" --web-dir=dist
           fi
 
-      # 6. Install Capacitor Android
+      # 6. Install Capacitor Android (use legacy peer deps)
       - name: Add Capacitor Android
         run: |
-          npm install @capacitor/android
+          npm install @capacitor/android --legacy-peer-deps
           npx cap add android
 
       # 7. Sync project
