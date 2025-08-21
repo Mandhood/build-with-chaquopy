@@ -21,9 +21,9 @@ jobs:
         with:
           node-version: '18'
 
-      # 3. Install dependencies
+      # 3. Install dependencies (skip peer dependency conflicts)
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       # 4. Install Capacitor core + CLI
       - name: Install Capacitor
