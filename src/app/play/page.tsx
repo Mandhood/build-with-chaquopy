@@ -31,8 +31,10 @@ function PlaySongLegacy() {
   const router = useRouter()
   const player = usePlayer()
   const searchParams = useSearchParams()
-  const { source, id, recording }: { source: SongSource; id: string; recording?: string } =
-    Object.fromEntries(searchParams) as any
+
+  // ✅ Null-safe fix for TypeScript build
+  const paramsObj = Object.fromEntries(searchParams ?? [])
+  const { source, id, recording }: { source: SongSource; id: string; recording?: string } = paramsObj
 
   const [settingsOpen, setSettingsPanel] = useState(false)
   const [isMidiModalOpen, setMidiModal] = useState(false)
@@ -61,7 +63,6 @@ function PlaySongLegacy() {
           : 'none'
 
   // Hack for updating player when config changes.
-  // Maybe move to the onChange? Or is this chill.
   const { waiting, left, right } = songConfig
   useEffect(() => {
     player.setWait(waiting)
@@ -76,7 +77,6 @@ function PlaySongLegacy() {
 
   useEffect(() => {
     if (!song) return
-    // TODO: handle invalid song. Pipe up not-found midi for 400s etc.
     const config = getSongSettings(id, song)
     setSongConfig(config)
     player.setSong(song, config)
@@ -131,7 +131,6 @@ function PlaySongLegacy() {
     <>
       <div
         className={clsx(
-          // Enable fixed to remove all scrolling.
           'fixed',
           'flex h-screen max-h-screen max-w-screen flex-col',
         )}
