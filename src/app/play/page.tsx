@@ -24,17 +24,16 @@ import { SettingsPanel, TopBar } from './components'
 import { MidiModal } from './components/MidiModal'
 
 // This function exists as hack to stop the CSR deopt warning.
-// To do this the "next app router" way would require boxing up the bits
-// that depend on search params in a Suspense boundary.
-// See https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
 function PlaySongLegacy() {
   const router = useRouter()
   const player = usePlayer()
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams() ?? new URLSearchParams()
 
-  // ✅ Null-safe fix for TypeScript build
-  const paramsObj = Object.fromEntries(searchParams ?? [])
-  const { source, id, recording }: { source: SongSource; id: string; recording?: string } = paramsObj
+  // ✅ Corrected null-safe and type-safe handling
+  const paramsObj = Object.fromEntries(searchParams.entries()) as Record<string, string>
+  const source = (paramsObj.source as SongSource) ?? 'local' // default value if missing
+  const id = paramsObj.id ?? ''
+  const recording = paramsObj.recording
 
   const [settingsOpen, setSettingsPanel] = useState(false)
   const [isMidiModalOpen, setMidiModal] = useState(false)
@@ -62,7 +61,6 @@ function PlaySongLegacy() {
           ? 'right'
           : 'none'
 
-  // Hack for updating player when config changes.
   const { waiting, left, right } = songConfig
   useEffect(() => {
     player.setWait(waiting)
@@ -108,7 +106,6 @@ function PlaySongLegacy() {
     }
   }, [synth, song, songConfig])
 
-  // If source or id is messed up, redirect to the homepage
   if (!source || !id) {
     router.replace('/')
   }
